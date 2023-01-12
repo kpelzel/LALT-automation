@@ -1,12 +1,29 @@
 substitutions:
-  deviceid: house_light_1
-  esphomename: house-light-1 # underscore in hostname is discouraged
-  devicename: House Light 1
+  device_number: "1"
+  deviceid: "house_light_${device_number}"
+  esphomename: "house-light-${device_number}" # underscore in hostname is discouraged
+  devicename: "House Light ${device_number}"
 
 esphome:
   name: $esphomename
   platform: ESP32
   board: esp32doit-devkit-v1
+  on_boot:
+    priority: 600
+    then:
+      - light.turn_on:
+          id: ${deviceid}
+          brightness: 100%
+          color_brightness: 100%
+          red: 100%
+          green: 69%
+          blue: 0%
+          white: 100%
+          transition_length: 0.35s
+      - delay: 0.5s # without this delay, the transition_length of the previous command will be ignored
+      - light.control:
+          id: ${deviceid}
+          effect: "Non-Addressable E1.31"
 
 wifi:
   ssid: !secret wifi_ssid
@@ -85,7 +102,8 @@ light:
     green: output_green
     blue: output_blue
     white: output_white
-    default_transition_length: 0.25s
+    default_transition_length: 0.35s
+    restore_mode: ALWAYS_OFF
     effects:
       - flicker:
       - random:
@@ -147,7 +165,7 @@ light:
           lambda: |-
             auto call = id(${deviceid}).turn_on();
             auto state = id(homeassistant_time).now().timestamp % 36;
-            call.set_transition_length(3);
+            call.set_transition_length(3000);
             call.set_white(0.0);
             if (state == 0) {
               call.set_rgb(1.0, 0.0, 0.0);
@@ -196,25 +214,8 @@ light:
           # transition_length: 1s      # defaults to 1s
           update_interval: 2s
       - strobe:
-      - strobe:
-          name: Strobe Effect With Custom Values
-          colors:
-            - state: true
-              brightness: 100%
-              red: 100%
-              green: 90%
-              blue: 0%
-              duration: 500ms
-            - state: false
-              duration: 250ms
-            - state: true
-              brightness: 100%
-              red: 0%
-              green: 100%
-              blue: 0%
-              duration: 500ms
       - non_addressable_e131:
-          universe: 1
+          universe: ${device_number}
           channel_map:
             red: 0
             green: 1
