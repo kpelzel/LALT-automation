@@ -54,11 +54,6 @@ external_components:
 e131:
   method: unicast
 
-i2c:
-  sda: 21
-  scl: 22
-  scan: True
-
 web_server:
   port: 80
 
