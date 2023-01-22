@@ -1,6 +1,6 @@
 substitutions:
-  device_number: "1"
-  ip_suffix: "101"
+  device_number: "3"
+  ip_suffix: "103"
   deviceid: "house_light_${device_number}"
   esphomename: "house-light-${device_number}" # underscore in hostname is discouraged
   devicename: "House Light ${device_number}"
