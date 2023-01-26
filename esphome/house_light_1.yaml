@@ -110,7 +110,8 @@ light:
     green: output_green
     blue: output_blue
     white: output_white
-    default_transition_length: 0.25s
+    # default_transition_length: 0.25s
+    default_transition_length: 0.5s
     restore_mode: ALWAYS_OFF
     effects:
       - flicker:
