@@ -5,7 +5,7 @@ substitutions:
   esphomename: "house-light-${device_number}" # underscore in hostname is discouraged
   devicename: "House Light ${device_number}"
 
-esphome:esphome:
+esphome:
   name: $esphomename
   on_boot:
     priority: 600
