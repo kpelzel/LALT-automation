@@ -28,8 +28,13 @@ esp32:
   board: esp32doit-devkit-v1
 
 wifi:
-  ssid: !secret wifi_ssid
-  password: !secret wifi_password
+  networks:
+  - ssid: !secret wifi_ssid_1
+    password: !secret wifi_password_1
+    hidden: true
+    priority: 5
+  - ssid: !secret wifi_ssid_2
+    password: !secret wifi_password_2
   power_save_mode: NONE
   # fast_connect: true
   # manual_ip:
@@ -46,6 +51,7 @@ captive_portal:
 
 # Enable Home Assistant API
 api:
+  reboot_timeout: 0s
 
 ota:
 
