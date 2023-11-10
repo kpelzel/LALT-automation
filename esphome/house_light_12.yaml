@@ -1,6 +1,5 @@
 substitutions:
   device_number: "12"
-  ip_suffix: "112"
   deviceid: "house_light_${device_number}"
   esphomename: "house-light-${device_number}" # underscore in hostname is discouraged
   devicename: "House Light ${device_number}"
@@ -22,7 +21,7 @@ esphome:
       - delay: 0.5s # without this delay, the transition_length of the previous command will be ignored
       - light.control:
           id: ${deviceid}
-          effect: "Non-Addressable E1.31"
+          effect: "Light Board Control"
 
 esp32:
   board: esp32doit-devkit-v1
@@ -32,16 +31,7 @@ wifi:
   - ssid: !secret wifi_ssid_1
     password: !secret wifi_password_1
     hidden: true
-    priority: 5
-  - ssid: !secret wifi_ssid_2
-    password: !secret wifi_password_2
   power_save_mode: NONE
-  # fast_connect: true
-  # manual_ip:
-  #   static_ip: "192.168.86.${ip_suffix}"
-  #   gateway: 192.168.86.1
-  #   subnet: 255.255.255.0
-  # domain: .lan
 
   # Enable fallback hotspot (captive portal) in case wifi connection fails
   ap:
@@ -59,12 +49,12 @@ external_components:
   - source:
       type: git
       url: https://github.com/kpelzel/esphome
-      ref: non-addressable-e131
+      ref: non-addressable-e131-rebased
     components: [e131]
     refresh: always
 
 e131:
-  method: unicast
+  method: multicast
 
 # Enable logging to ESPHome
 logger:
@@ -92,7 +82,7 @@ button:
       - delay: 0.5s # without this delay, the transition_length of the previous command will be ignored
       - light.control:
           id: ${deviceid}
-          effect: "Non-Addressable E1.31"
+          effect: "Light Board Control"
 
 time:
   - platform: homeassistant
@@ -104,25 +94,25 @@ output:
     id: output_red
     pin: GPIO14
     frequency: "600Hz"
-    max_power: 0.85
+    max_power: 0.75
     power_supply: rgb_power
   - platform: ledc
     id: output_green
     pin: GPIO26
     frequency: "600Hz"
-    max_power: 0.85
+    max_power: 0.75
     power_supply: rgb_power
   - platform: ledc
     id: output_blue
     pin: GPIO13
     frequency: "600Hz"
-    max_power: 0.85
+    max_power: 0.75
     power_supply: rgb_power
   - platform: ledc
     id: output_white
     pin: GPIO15
     frequency: "600Hz"
-    max_power: 0.85
+    max_power: 0.75
 
 binary_sensor:
   - platform: gpio
@@ -271,9 +261,18 @@ light:
           update_interval: 2s
       - strobe:
       - non_addressable_e131:
-          universe: ${device_number}
+          name: "Light Board Control"
+          universe: 1
           channel_map:
-            red: 0
-            green: 1
-            blue: 2
-            white: 3
+            red: 44
+            green: 45
+            blue: 46
+            white: 47
+      - non_addressable_e131:
+          name: "E1.31 Universe 2"
+          universe: 2
+          channel_map:
+            red: 44
+            green: 45
+            blue: 46
+            white: 47
