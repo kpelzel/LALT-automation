@@ -264,10 +264,10 @@ light:
           name: "Light Board Control"
           universe: 1
           channel_map:
-            red: 32
-            green: 33
-            blue: 34
-            white: 35
+            red: 0
+            green: 1
+            blue: 2
+            white: 3
       - non_addressable_e131:
           name: "E1.31 Universe 2"
           universe: 2
